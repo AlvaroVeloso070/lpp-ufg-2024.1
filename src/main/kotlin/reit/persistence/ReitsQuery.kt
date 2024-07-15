@@ -4,29 +4,45 @@ import com.webscrapper.DBManager
 import com.webscrapper.Query
 import org.jetbrains.exposed.sql.SortOrder
 import org.jetbrains.exposed.sql.andWhere
-import org.jetbrains.exposed.sql.or
 import org.jetbrains.exposed.sql.selectAll
 import java.text.DecimalFormat
 import java.util.*
 
 interface ReitsQuery : Query {
-    fun melhoresReits()
+    fun melhoresReitsPapel()
+    fun melhoresReitsTijolo()
     fun consultarReit(papel: String)
 }
 
 class ReitsQueryImpl : ReitsQuery {
-    override fun melhoresReits() {
+
+    override fun melhoresReitsPapel() {
         DBManager.inTransaction {
             val query = Reits.selectAll()
                 .where { Reits.dividendYield greaterEq 8.0 }
                 .andWhere { Reits.valorDeMercado greater 100000000.0 }
-                .andWhere { Reits.liquidez greater 1000000.0 }
-                .andWhere { Reits.pvp lessEq 1.2 }
-                .andWhere { Reits.pvp greaterEq 0.8 }
-                .andWhere {
-                    (Reits.quantidadeImoveis eq 0) or (Reits.vacanciaMedia less 15.0)
-                }
-                .orderBy(Reits.valorDeMercado, SortOrder.DESC)
+                .andWhere { Reits.liquidez greater 1500000.0 }
+                .andWhere { Reits.pvp lessEq 1.02 }
+                .andWhere { Reits.pvp greaterEq 0.9 }
+                .andWhere { Reits.quantidadeImoveis eq 0 }
+                .orderBy(Reits.liquidez, SortOrder.DESC)
+                .limit(20)
+
+            imprimirQuery(query)
+        }
+    }
+
+    override fun melhoresReitsTijolo() {
+        DBManager.inTransaction {
+            val query = Reits.selectAll()
+                .where { Reits.dividendYield greaterEq 8.0 }
+                .andWhere { Reits.valorDeMercado greater 100000000.0 }
+                .andWhere { Reits.liquidez greater 1500000.0 }
+                .andWhere { Reits.pvp lessEq 1.02 }
+                .andWhere { Reits.pvp greaterEq 0.9 }
+                .andWhere { Reits.quantidadeImoveis greater 0 }
+                .andWhere { Reits.vacanciaMedia less 15.0 }
+                .orderBy(Reits.liquidez, SortOrder.DESC)
                 .limit(20)
 
             imprimirQuery(query)
@@ -49,14 +65,14 @@ class ReitsQueryImpl : ReitsQuery {
 
     override fun imprimirQuery(query: org.jetbrains.exposed.sql.Query) {
         val df = DecimalFormat("#,##0.00")
-        val cotacao_length = 13
-        val pvp_length = 5
-        val dividendYield_length = 19
-        val segmento_length = 20
-        val qtdImoveis_length = 13
-        val vacanciaMedia_length = 19
-        val liquidez_length = 14
-        val valorDeMercado_length = 22
+        val cotacaoLength = 13
+        val pvpLength = 5
+        val dividendyieldLength = 19
+        val segmentoLength = 20
+        val qtdimoveisLength = 13
+        val vacanciamediaLength = 19
+        val liquidezLength = 14
+        val valordemercadoLength = 22
 
 
         val header =
@@ -80,8 +96,8 @@ class ReitsQueryImpl : ReitsQuery {
             val vacanciaMedia = df.format(row[Reits.vacanciaMedia])
 
             println(
-                "| $papel | $cotacao${getSpacesForColumn(cotacao_length, cotacao)}| $pvp${getSpacesForColumn(pvp_length, pvp)}| $dividendYield${getSpacesForColumn(dividendYield_length, dividendYield)}| $segmento${getSpacesForColumn(segmento_length, segmento)}| $qtdImoveis${getSpacesForColumn(qtdImoveis_length,
-                    qtdImoveis.toString())}| $vacanciaMedia${getSpacesForColumn(vacanciaMedia_length, vacanciaMedia)}| $liquidez${getSpacesForColumn(liquidez_length, liquidez)}| $valorDeMercado${getSpacesForColumn(valorDeMercado_length, valorDeMercado)}|"
+                "| $papel | $cotacao${getSpacesForColumn(cotacaoLength, cotacao)}| $pvp${getSpacesForColumn(pvpLength, pvp)}| $dividendYield${getSpacesForColumn(dividendyieldLength, dividendYield)}| $segmento${getSpacesForColumn(segmentoLength, segmento)}| $qtdImoveis${getSpacesForColumn(qtdimoveisLength,
+                    qtdImoveis.toString())}| $vacanciaMedia${getSpacesForColumn(vacanciamediaLength, vacanciaMedia)}| $liquidez${getSpacesForColumn(liquidezLength, liquidez)}| $valorDeMercado${getSpacesForColumn(valordemercadoLength, valorDeMercado)}|"
             )
         }
 

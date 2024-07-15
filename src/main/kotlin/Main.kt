@@ -23,8 +23,9 @@ fun main() {
         println("========================")
         println("1 - Melhores ações do mercado (Análise Quantitativa)")
         println("2 - Consultar Ação por Ticker")
-        println("3 - Melhores fundos imobiliários do mercado (Análise Quantitativa)")
-        println("4 - Consultar Fundo Imobiliário por Ticker")
+        println("3 - Melhores fundos imobiliários de papel do mercado (Análise Quantitativa)")
+        println("4 - Melhores fundos imobiliários de tijolo do mercado (Análise Quantitativa)")
+        println("5 - Consultar Fundo Imobiliário por Ticker")
         println("0 - Sair")
         println("========================")
         print("Escolha uma opção: ")
@@ -40,8 +41,9 @@ fun main() {
         when (opcao) {
             1 -> stocksQuery.melhoresAcoes()
             2 -> consultarAcaoPorTicker()
-            3 -> reitsQuery.melhoresReits()
-            4 -> consultarFundoImobiliarioPorTicker()
+            3 -> reitsQuery.melhoresReitsPapel()
+            4 -> reitsQuery.melhoresReitsTijolo()
+            5 -> consultarFundoImobiliarioPorTicker()
             0 -> {
                 println("Saindo...")
                 break
