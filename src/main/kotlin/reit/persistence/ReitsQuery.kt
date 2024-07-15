@@ -26,7 +26,7 @@ class ReitsQueryImpl : ReitsQuery {
                 .andWhere { Reits.pvp greaterEq 0.9 }
                 .andWhere { Reits.quantidadeImoveis eq 0 }
                 .orderBy(Reits.liquidez, SortOrder.DESC)
-                .limit(20)
+                .limit(10)
 
             imprimirQuery(query)
         }
@@ -43,7 +43,7 @@ class ReitsQueryImpl : ReitsQuery {
                 .andWhere { Reits.quantidadeImoveis greater 0 }
                 .andWhere { Reits.vacanciaMedia less 15.0 }
                 .orderBy(Reits.liquidez, SortOrder.DESC)
-                .limit(20)
+                .limit(10)
 
             imprimirQuery(query)
         }
